@@ -1,7 +1,17 @@
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import cartPng from '../../../assets/icon/cart-notification.png'
+import { useContext } from "react";
+import { AuthContext } from "../../../Provider/AuthProvider";
 
 const Navber = () => {
+
+  const {user, logOut} = useContext(AuthContext)
+
+  const handleLogOut = ()=>{
+    logOut()
+    .then()
+    .catch(error => console.log(error.message))
+  }
 
     const navLins = <>
     <li><NavLink to='/'>Home</NavLink></li>
@@ -30,7 +40,9 @@ const Navber = () => {
     </ul>
   </div>
   <div className="navbar-end">
-    <a className="btn">Login</a>
+   {
+    user ?  <button onClick={handleLogOut} className="btn">LogOut</button> :  <Link to='/login' className="btn">Login</Link>
+   }
   </div>
 </div>
      );
