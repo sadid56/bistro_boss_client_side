@@ -1,11 +1,13 @@
 import { Link, NavLink } from "react-router-dom";
-import cartPng from '../../../assets/icon/cart-notification.png'
 import { useContext } from "react";
 import { AuthContext } from "../../../Provider/AuthProvider";
+import { FaShopify } from "react-icons/fa";
+import useCards from "../../../hooks/useCards";
 
 const Navber = () => {
 
   const {user, logOut} = useContext(AuthContext)
+  const [card] = useCards()
 
   const handleLogOut = ()=>{
     logOut()
@@ -18,7 +20,12 @@ const Navber = () => {
     <li><NavLink to='/contact'>Contact Us</NavLink></li>
     <li><NavLink to='/dashboard'>Dashboard</NavLink></li>
     <li><NavLink to='/menu'>Our Menu</NavLink></li>
-    <li><NavLink to='/order'>Order Food<img src={cartPng} className="w-5" alt="" /></NavLink></li>
+    <li><NavLink to='/order'>Order Food</NavLink></li>
+    <li><NavLink to='/dashboard/cart'>
+      <FaShopify/>
+     <div className="badge badge-secondary">+{card.length}</div>
+     </NavLink>
+     </li>
     </>
 
     return ( 
