@@ -4,7 +4,7 @@ import MenuItems from "../menuItems/MenuItems";
 
 const MenuCategory = ({ item }) => {
   const navigate = useNavigate();
-  console.log(item);
+  // console.log(item);
   return (
     <div>
       <div className="grid grid-cols-2 gap-4 my-10">

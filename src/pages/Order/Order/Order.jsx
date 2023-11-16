@@ -5,7 +5,7 @@ import { Tab, TabList, TabPanel, Tabs } from "react-tabs";
 import { useState } from "react";
 import "react-tabs/style/react-tabs.css";
 import useMenu from "../../../hooks/useMenu";
-import OrderCards from "../../Shared/OrderCads/OrderCards";
+// import OrderCards from "../../Shared/OrderCads/OrderCards";
 import OrderTabs from "../../Shared/OrderCads/OrderTabs";
 import { useParams } from "react-router-dom";
 
@@ -41,7 +41,7 @@ const Order = () => {
             <Tab>DRINKS</Tab>
           </TabList>
           <TabPanel>
-            <OrderTabs item={salad}></OrderTabs>
+            <OrderTabs item={salad}></OrderTabs> 
           </TabPanel>
           <TabPanel>
             <OrderTabs item={pizza}></OrderTabs>

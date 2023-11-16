@@ -5,10 +5,12 @@ import { AuthContext } from "../Provider/AuthProvider";
 import { Link, useNavigate } from "react-router-dom";
 import { FaFacebookF, FaGoogle, FaSquareGithub } from "react-icons/fa6";
 import { useForm } from "react-hook-form";
+import useAxiosPublic from "../hooks/useAxiosPublic";
 
 const Registation = () => {
-  const navigate = useNavigate()
-  const { createUser, googleLogin ,profileUpdate} = useContext(AuthContext);
+  const navigate = useNavigate();
+  const { createUser, googleLogin, profileUpdate } = useContext(AuthContext);
+  const axiosPublic = useAxiosPublic();
 
   const {
     register,
@@ -17,27 +19,53 @@ const Registation = () => {
   } = useForm();
 
   const onSubmit = (data) => {
+    console.log(data);
     createUser(data.email, data.password)
-    .then(() => {
 
-      profileUpdate(data.name, data.photo)
-      .then()
-      .catch(error =>{ 
-        alert("registration success");
-        navigate('/')
-        console.log(error.message)})
+      .then(() => {
+        profileUpdate(data.name, data.photo)
+          .then(() => {
+            // create user to save database
+            console.log(data.name);
+            const userInfo = {
+              name: data.name,
+               email: data.email
+              }
+            axiosPublic.post("/users", userInfo)
+            .then((res) => {
+              // if (res.data.insertedId) {
+              //   alert("registration success");
+              //   navigate("/");
+              // }
+              console.log(res.data);
+              navigate('/')
+            });
+          })
 
-     
-    })
-    .catch((error) => console.log(error.message));
+          .catch((error) => {
+            console.log(error.message);
+          });
+      })
+      .catch((error) => console.log(error.message));
   };
-
-
-
 
   const handleGoogleLogin = () => {
     googleLogin()
-      .then()
+      .then((res)=>{
+        const userInfo = {
+          name: res?.user?.displayName,
+           email: res?.user?.email
+          }
+        axiosPublic.post("/users", userInfo)
+        .then((res) => {
+          // if (res.data.insertedId) {
+          //   alert("registration success");
+          //   navigate("/");
+          // }
+          console.log(res.data);
+          navigate('/')
+        });
+      })
       .catch((error) => console.log(error.message));
   };
 
@@ -123,9 +151,7 @@ const Registation = () => {
                 </p>
               )}
               {errors.password?.type === "pattern" && (
-                <p className="text-red-600">
-                  Provide me a strong password
-                </p>
+                <p className="text-red-600">Provide me a strong password</p>
               )}
             </div>
 
