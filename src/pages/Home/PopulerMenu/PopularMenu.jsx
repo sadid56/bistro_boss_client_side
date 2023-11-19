@@ -7,15 +7,6 @@ const PopularMenu = () => {
   const  [menu] = useMenu()
   console.log(menu);
   const populer = menu.filter(items => items.category === 'popular')
-    // const [menu, setMenu] = useState([])
-    // useEffect(()=>{
-    //     fetch('/menu.json')
-    //     .then(res => res.json())
-    //     .then(data => {
-    //         const dataFilter = data.filter(item => item.category === 'popular')
-    //         setMenu(dataFilter)
-    //     })
-    // },[])
     return ( 
         <div className="mb-10">
             <SectionTitle heading={"Check it out"} title={"FROM OUR MENU"}/>
@@ -35,9 +26,9 @@ const PopularMenu = () => {
                   viewBox="0 0 24 24"
                   xmlns="http://www.w3.org/2000/svg">
                   <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
                     d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
                 </svg>
               </span>
@@ -49,9 +40,9 @@ const PopularMenu = () => {
                   viewBox="0 0 24 24"
                   xmlns="http://www.w3.org/2000/svg">
                   <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
                     d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
                 </svg>
               </span>

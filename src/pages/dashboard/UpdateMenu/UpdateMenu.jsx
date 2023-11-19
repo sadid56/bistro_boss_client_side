@@ -1,54 +1,37 @@
+import { Helmet } from "react-helmet";
 import { useForm } from "react-hook-form";
 import SectionTitle from "../../../components/SectionTitle/SectionTitle";
-import { Helmet } from "react-helmet";
-import useAxiosPublic from "../../../hooks/useAxiosPublic";
+import { useLoaderData, useNavigate } from "react-router-dom";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 
-const AddItem = () => {
+const UpdateMenu = () => {
   const { register, handleSubmit } = useForm();
-  const axiosPublic = useAxiosPublic();
-  const axiosSecure = useAxiosSecure()
-  // const image_hosting_key = import.meta.env.VITE_IMAGE_HOSTING;
-  // console.log(image_hosting_key, 'hj');
+  const item = useLoaderData();
+  const navigate = useNavigate();
+  //   console.log(item);
+  const axiosSecure = useAxiosSecure();
+
   const onSubmit = async (data) => {
-    // console.log(data);
-    //img hosting in imgBB
-    const imageFile = { image: data?.image[0] };
-    const res = await axiosPublic.post(
-      "https://api.imgbb.com/1/upload?key=1e3d9b9de0fac648ff4fe1ebb1bc6ff4",
-      imageFile,
-      {
-        headers: {
-          "content-type": "multipart/form-data",
-        },
-      }
-    );
-    // console.log(res.data);
-    //now save menu item in server
-    if(res.data.success){
-      const menuItem = {
-        name: data?.name,
-        category: data?.category,
-        price: parseFloat(data?.price),
-        image: res.data.data.display_url,
-        recipe: data?.details,
-      }
-      axiosSecure.post('/menu', menuItem)
-      .then(res => {
-        // console.log(res.data);
-        if(res.data.acknowledged){
-          alert('Mneu added success !')
-        }
-      })
+    console.log(data);
+    const menuItem = {
+      name: item?.name,
+      category: item?.category,
+      price: parseFloat(item?.price),
+      recipe: item?.details,
+    };
+    const res = await axiosSecure.patch(`/menu/${item._id}`, menuItem);
+    console.log(res.data);
+    if (res.data.acknowledged) {
+      alert("update success");
+      navigate(-1);
     }
   };
   return (
     <div>
       <Helmet>
-        <title>Bistro Boss | Add Item</title>
+        <title>Bistro Boss | Update Item</title>
       </Helmet>
-      <SectionTitle heading={"Whats new?"} title={"add item"} />
-
+      <SectionTitle title={"Update Item"} />
       <div className="max-w-4xl mx-auto">
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="form-control">
@@ -57,6 +40,7 @@ const AddItem = () => {
             </label>
             <input
               {...register("name")}
+              defaultValue={item?.name}
               type="text"
               placeholder="Recipe Name"
               className="input input-bordered"
@@ -70,6 +54,7 @@ const AddItem = () => {
               </label>
               <select
                 {...register("category")}
+                defaultValue={item?.category}
                 className="select select-bordered w-full ">
                 <option disabled selected>
                   Category
@@ -87,6 +72,7 @@ const AddItem = () => {
               </label>
               <input
                 {...register("price")}
+                defaultValue={item?.price}
                 type="text"
                 placeholder="Price"
                 className="input input-bordered"
@@ -101,22 +87,20 @@ const AddItem = () => {
             <textarea
               required
               {...register("details")}
+              defaultValue={item?.recipe}
               className="textarea textarea-bordered"
               placeholder="Recipe Details"></textarea>
           </div>
-          <input
-            {...register("image")}
-            type="file"
-            className="file-input w-full max-w-xs my-5"
-          />{" "}
-          <br />
-          <button type="submit" className="btn">
-            Add Item
-          </button>
+
+          <div className="flex justify-center mt-5">
+            <button type="submit" className="btn">
+              Update Item
+            </button>
+          </div>
         </form>
       </div>
     </div>
   );
 };
 
-export default AddItem;
+export default UpdateMenu;
