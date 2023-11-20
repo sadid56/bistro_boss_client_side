@@ -3,11 +3,14 @@ import { useContext } from "react";
 import { AuthContext } from "../../../Provider/AuthProvider";
 import { FaShopify } from "react-icons/fa";
 import useCards from "../../../hooks/useCards";
+import useAdmin from "../../../hooks/useAdmin";
+
 
 const Navber = () => {
 
   const {user, logOut} = useContext(AuthContext)
   const [card] = useCards()
+  const [isAdmin] = useAdmin()
 
   const handleLogOut = ()=>{
     logOut()
@@ -18,14 +21,21 @@ const Navber = () => {
     const navLins = <>
     <li><NavLink to='/'>Home</NavLink></li>
     <li><NavLink to='/contact'>Contact Us</NavLink></li>
-    <li><NavLink to='/dashboard'>Dashboard</NavLink></li>
     <li><NavLink to='/menu'>Our Menu</NavLink></li>
     <li><NavLink to='/order'>Order Food</NavLink></li>
-    <li><NavLink to='/dashboard/cart'>
-      <FaShopify/>
+    <li><NavLink to='/dashboard/cart'><FaShopify/>
      <div className="badge badge-secondary">+{card.length}</div>
      </NavLink>
      </li>
+
+    {
+      user && isAdmin && <li><NavLink to='/dashboard/admin-home'>Dashboard</NavLink></li>
+    }
+    {
+      user && !isAdmin && <li><NavLink to='/dashboard/user-home'>Dashboard</NavLink></li>
+    }
+    
+
     </>
 
     return ( 

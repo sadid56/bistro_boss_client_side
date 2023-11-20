@@ -1,8 +1,9 @@
 import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
 import { useEffect, useState } from "react";
-import useAxiosSecure from "../../../hooks/useAxiosSecure";
+import useAxiosSecure, { axiosSexure } from "../../../hooks/useAxiosSecure";
 import useCards from "../../../hooks/useCards";
 import useAuth from "../../../hooks/useAuth";
+import { useNavigate } from "react-router-dom";
 
 const CheckoutForm = () => {
   const {user} = useAuth()
@@ -12,16 +13,21 @@ const CheckoutForm = () => {
   const [clintSecret, setClientSecret] = useState("");
   const [transactionId, setTransactionId] = useState('')
   const axiosSecure = useAxiosSecure();
-  const [card] = useCards();
-  const totalPrice = card.reduce((total, item) => total + item.price, 0);
+  const [items, refetch] = useCards();
+  const navigate = useNavigate()
+  const totalPrice = items.reduce((total, item) => total + item.price, 0);
 
   useEffect(() => {
+
+   if(totalPrice > 0){
     axiosSecure
-      .post("/create-peyment-intent", { price: totalPrice })
-      .then((res) => {
-        console.log(res.data.clientSecret);
-        setClientSecret(res.data.clientSecret);
-      });
+    .post("/create-peyment-intent", { price: totalPrice })
+    .then((res) => {
+      console.log(res.data.clientSecret);
+      setClientSecret(res.data.clientSecret);
+    });
+
+   }
   }, [axiosSecure, totalPrice]);
 
   const handleSubmit = async (e) => {
@@ -66,6 +72,28 @@ const CheckoutForm = () => {
       if(paymentIntent.status === 'succeeded'){
         console.log('transaction id', paymentIntent.id);
         setTransactionId(paymentIntent.id)
+
+
+        //*now save the payment
+        const payment = {
+          email: user?.email,
+          price: totalPrice,
+          date: new Date(),
+          cardIds: items.map(item => item?._id),
+          menuItemIds: items.map(item => item?.menuId),
+          status: 'pending',
+          transactionId: paymentIntent.id
+        }
+
+        console.log(payment);
+
+        const res = axiosSexure.post('/payments', payment)
+        console.log(res.data);
+        refetch()
+        if(res.data?.result?.insertedId){
+          alert('payment success')
+          navigate('/dashboard/payment-history')
+        }
       }
     }
   };

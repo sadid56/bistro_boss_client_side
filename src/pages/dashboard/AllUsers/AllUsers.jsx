@@ -14,7 +14,7 @@ const ALlUsers = () => {
     const hanldeDelete = (id)=>{
         const proced = confirm('are you sure to delete?')
        if(proced){
-        axiosSecure.delete(`/users/:${id}`)
+        axiosSecure.delete(`/users/${id}`)
         .then(res => {
             console.log(res.data);
             refetch()
@@ -25,7 +25,7 @@ const ALlUsers = () => {
     const handleUpdateRol = (user) =>{
         const proced = confirm('are you sure to change role ?')
         if(proced){
-            axiosSecure.patch(`/users/:${user}`)
+            axiosSecure.patch(`/users/${user._id}`)
             .then(res => {
                 console.log(res.data);
                 refetch()
