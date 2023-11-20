@@ -2,10 +2,12 @@ import { Helmet } from "react-helmet";
 import useCards from "../../../hooks/useCards";
 import SectionTitle from "../../../components/SectionTitle/SectionTitle";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
+import { useNavigate } from "react-router-dom";
 
 const Cart = () => {
   const [card, refetch] = useCards();
   const axiosSecure  = useAxiosSecure()
+  const navigate = useNavigate()
   const totalPrice = card.reduce((prev, current) => prev + current.price, 0);
 
   const handleDelete = id =>{
@@ -29,7 +31,9 @@ const Cart = () => {
       <div className="flex justify-evenly">
         <h3 className="text-3xl font-bold">Total Order: {card.length}</h3>
         <h3 className="text-3zxl font-bold">Total Price:$ {totalPrice}</h3>
-        <button className="btn">Pay</button>
+
+        <button disabled={!card.length} onClick={()=> navigate('/dashboard/peyment')} className="btn btn-primary">Pay</button>
+
       </div>
       <div className="overflow-x-auto">
         <table className="table">
